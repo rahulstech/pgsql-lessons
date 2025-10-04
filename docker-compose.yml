@@ -1,0 +1,11 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: local-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: practice_db
+    ports:
+      - "5432:5432"
