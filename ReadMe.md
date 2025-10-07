@@ -3,8 +3,11 @@
 ### Content
 - [Installation and Setup](#installation-and-setup)
 - [Data types](./Datatypes.md)
+- [Json, JsonB, Array Types](Json_And_Array.md)
 - [Built in function](./BuiltInFunctions.md)
 - [Schema and Namespace](./Schema.md)
+- [Functions and Procedures](function_and_procedure.sql)
+- [Conditional Statement and Loops](conditional_statement_and_loop.sql)
 
 ### Installation and Setup
 I am using **pgsql:16** docker image for this lesson. A docker compose file is given to create the pgsql container. Run the following command to crete the container.

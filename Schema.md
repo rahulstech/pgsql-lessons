@@ -4,7 +4,7 @@
  - default schemas name is _public_
 
  **Example 1:**
-  ```sql
+  ```postgresql
     create schema auth;
     
     -- an users table in auth schema
@@ -30,7 +30,7 @@
     select * from orders.users;
   ```
  **Example 2:**
-  ```sql
+  ```postgresql
     create table auth.C (c varchar(30));
 
     insert into auth.C values ('abc'),('def');
