@@ -129,3 +129,76 @@ select employee_with_experience_more_than_year(7);
 select * from employee_with_experience_more_than_year(7);
 
 drop function employee_with_experience_more_than_year;
+
+-------------------------------------------------------------------------
+--                          IN, OUT, INOUT                             --
+-------------------------------------------------------------------------
+
+create table employee_performance (
+    id serial,
+    name varchar(30),
+    rating int
+);
+
+insert into employee_performance (name, rating) values
+('Rahul', 7),
+('Rivu', 5),
+('Rounak', 9),
+('Puspa', 6),
+('Poulomi', 8),
+('Ritvik', 10),
+('Aakash', 4),
+('Aashish', 3);
+
+-- functions parameters can be of three types in, out and inout
+-- in: this is the default type. i can explicitly mention it or remove it.
+--      these parameters are used to pass values to the function.
+-- out: use these parameter to return values from function. return type
+--      is not necessary if out parameter is available
+-- inout: use these parameter to pass value to function as well as
+--        return value from the function. its behaviour is in + out
+create function calculate_performance_bonus(
+    in emp_id int,
+    inout current_salary int,
+    out emp_name varchar(30),
+    out emp_rating int,
+    out performance_score numeric(5,2)
+)
+language plpgsql
+as $$
+    begin
+        select name, rating
+        into emp_name, emp_rating
+        from employee_performance where id = emp_id;
+
+        if not found then
+            raise notice 'emp with id % not found', emp_id;
+            return ;
+        end if;
+        performance_score := emp_rating * 1.5;
+        current_salary :=  emp_rating * 1000;
+    end;
+$$;
+
+drop function calculate_performance_bonus;
+
+select * from calculate_performance_bonus(2,10000);
+
+select * from calculate_performance_bonus(10,20000);
+
+-- here the intention is to output salary_hike for all the employees. but it returns only one row not all
+create function calculate_salary_hike(
+    out emp_id int,
+    out emp_name varchar(30),
+    out emp_rating int,
+    out salary_hike int
+) language plpgsql
+as $$
+    begin
+       select id, name,  rating, rating * 1000
+        into emp_id, emp_name, emp_rating, salary_hike -- NOTE: into returns only the first row not all the rows
+        from employee_performance;
+    end;
+    $$;
+
+select * from calculate_salary_hike();
