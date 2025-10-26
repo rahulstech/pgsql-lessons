@@ -3,5 +3,7 @@
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/conditional_statement_and_loop.sql" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/function_and_procedure.sql" dialect="PostgreSQL" />
+    <file url="file://$PROJECT_DIR$/window_function.sql" dialect="GenericSQL" />
+    <file url="PROJECT" dialect="PostgreSQL" />
   </component>
 </project>
