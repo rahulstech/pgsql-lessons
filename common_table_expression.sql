@@ -110,3 +110,44 @@ with cte1 as (
     select *, row_number() over (partition by dept order by doj) rank_highest_tenure_in_dept from employees
 )
 select name, dept from cte1 where rank_highest_tenure_in_dept = 1;
+
+
+---------------------------------------------
+---            Recursive CTE              ---
+---------------------------------------------
+drop table employees;
+
+CREATE TABLE employees (
+    id SERIAL PRIMARY KEY,
+    name TEXT,
+    manager_id INT REFERENCES employees(id)
+);
+
+INSERT INTO employees (name, manager_id) VALUES
+('CEO', NULL),
+('Manager A', 1),
+('Manager B', 1),
+('Dev 1', 2),
+('Dev 2', 2),
+('Dev 3', 3);
+
+with recursive emm_hierchy as (
+
+    -- base case filters the top level manager, without a base case recursion will not start
+    select id, name, manager_id, 1 as level from employees where manager_id is null
+
+    union all -- union all required otherwise duplicates will vanish
+
+    -- now filter employees where the above one is the manager
+    -- for example:
+    -- first it finds the CEO
+    -- the for finds employees where CEO is the manager. it finds 2 new rows. so it will recurse again for each of these employees but as manager
+    -- again 2 employees found where 'Manager A' is manager. one manager still left.
+    -- found 1 employee where 'Manager B' is manager.
+    -- so at these point there are 3 new rows. for each of these new rows it will recurse again
+    -- since no more employees available where 'Dev 1', 'Dev 2', 'Dev 3' are manager so recursion stops.
+    -- in short recursive cte recurse till new rows available
+    select e.id, e.name, e.manager_id, eh.level + 1 as level
+    from employees e inner join emm_hierchy eh on e.manager_id = eh.id
+)
+select * from emm_hierchy;
